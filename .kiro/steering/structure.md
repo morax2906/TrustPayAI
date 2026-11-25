@@ -4,6 +4,7 @@
 ```
 src/app/            Next.js App Router (layout.tsx, page.tsx, globals.css, fonts/)
 plan&idea/          Planning docs (proposal, 8-day plan). Not code.
+docs/archive/       Historical/vision-only docs (not build scope)
 .kiro/steering/     These steering docs
 ```
 Path alias: `@/*` maps to `./src/*`.

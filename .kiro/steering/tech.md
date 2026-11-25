@@ -32,11 +32,13 @@ res: { score: 0-100, level: "safe"|"caution"|"high",
        signals: [{code,label,evidence}], recommendation: string,
        confidence: 0-1, model: "haiku"|"heuristic" }
 ```
+`image_text` means text that the user pastes from a screenshot or image. Automatic OCR is still out of scope (v2); do not imply the server performs OCR.
+
 Do not change this contract without telling Quyen (frontend) and updating the README.
 
 ## Cost discipline ($20 AWS budget)
 - Haiku only for AI calls. No Sonnet for routine requests.
-- Rate limit: about 30 scans/day and 100 chat/day for the demo account, enforced server-side.
+- Rate limit: about 30 scans/day and 100 chat/day for the demo account, enforced server-side. The chat limit applies to single-turn questions about a scan result only, not a free-form financial assistant.
 - AWS Budget Alarm at $15. SES deferred (in-app alerts only).
 - Avoid long agent loops in Kiro. Use cheaper models for boilerplate.
 
