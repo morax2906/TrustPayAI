@@ -1,0 +1,95 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  // Pooled connection (Supabase pgbouncer) for the app.
+  url       = env("DATABASE_URL")
+  // Direct connection for migrations.
+  directUrl = env("DIRECT_URL")
+}
+
+enum TxType {
+  income
+  expense
+}
+
+enum UsageKind {
+  scan
+  chat
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String?
+  passwordHash String
+  isDemo       Boolean  @default(false)
+  // Explicit consent to data processing (Nghi dinh 13/2023).
+  consentAt    DateTime?
+  createdAt    DateTime @default(now())
+
+  transactions Transaction[]
+  scans        ScanHistory[]
+  usage        ApiUsage[]
+}
+
+model Category {
+  id   String @id @default(cuid())
+  slug String @unique
+  name String
+
+  transactions Transaction[]
+}
+
+model Transaction {
+  id          String   @id @default(cuid())
+  userId      String
+  date        DateTime
+  // Amount in VND, always positive. Direction is given by `type`.
+  amount      Int
+  type        TxType
+  description String
+  categoryId  String?
+  // Hash of date + amount + normalized description, used to dedup imports.
+  dedupHash   String
+  createdAt   DateTime @default(now())
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category Category? @relation(fields: [categoryId], references: [id])
+
+  @@unique([userId, dedupHash])
+  @@index([userId, date])
+}
+
+model ScanHistory {
+  id          String   @id @default(cuid())
+  userId      String
+  type        String
+  // Minimal retention: hash plus a short excerpt, never the full content.
+  contentHash String
+  excerpt     String
+  score       Int
+  level       String
+  model       String
+  result      Json
+  createdAt   DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+}
+
+// Per-user, per-day counter for server-side rate limiting.
+model ApiUsage {
+  id     String    @id @default(cuid())
+  userId String
+  day    DateTime  @db.Date
+  kind   UsageKind
+  count  Int       @default(0)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, day, kind])
+}
