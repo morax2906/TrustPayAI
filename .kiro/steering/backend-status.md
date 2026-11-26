@@ -40,4 +40,4 @@ Chưa kiểm thử với DB thật. Smoke test Bedrock chưa chạy (cần `.env
 - Đổi contract `/api/analyze` thì báo Quyen và cập nhật README.
 - Trước khi báo xong: `npm run typecheck`, `npm run lint`, `npm test`.
 - Không thêm S3, CloudWatch, SES, OCR, Gmail (v2).
-- `plan&idea/` bị `.gitignore`, nên đừng giả định các bạn khác có file đó.
+- `plan&idea/` nằm trong `.gitignore`, chỉ `CHECKLIST_DEV_A.md` đã được commit từ trước. `DEVELOPMENT_PLAN.md` không có trong repo, nên đừng giả định các bạn khác có file đó.

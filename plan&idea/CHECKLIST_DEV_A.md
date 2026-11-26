@@ -4,11 +4,10 @@
 
 ## Phase 0 — Hôm nay (25/11, chặn tiến độ)
 - [ ] **Request Bedrock model access** Claude 3.5 Haiku (region dùng, vd `us-east-1`) — rủi ro trễ nhất
-- [ ] IAM user least-privilege: `bedrock:InvokeModel`, `s3:*` (bucket của bạn); tạo access key
+- [ ] IAM user least-privilege: chỉ `bedrock:InvokeModel` cho đúng một model; tạo access key
 - [ ] **AWS Budget Alarm $15** + email cảnh báo billing
-- [ ] Tạo S3 bucket + lifecycle rule xóa sau 1 ngày
 - [ ] Smoke test gọi Haiku bằng script (xác nhận chạy trước khi build)
-- [ ] Cài deps: `prisma @prisma/client next-auth zod bcryptjs @aws-sdk/client-bedrock-runtime @aws-sdk/client-s3 @aws-sdk/s3-request-presigner`
+- [ ] Cài deps: `prisma @prisma/client next-auth zod bcryptjs @aws-sdk/client-bedrock-runtime`
 - [ ] `.env.example` + `.env.local` (DATABASE_URL, NEXTAUTH_SECRET, AWS_*, AWS_REGION, BEDROCK_MODEL_ID)
 - [ ] Supabase project → `DATABASE_URL` → `prisma init` + migration đầu tiên
 - [ ] **Prisma schema:** `User`, NextAuth tables (`Account/Session/VerificationToken`), `Transaction`, `Category`, `ScanHistory`, `ApiUsage` (rate-limit), `Budget` (optional)
@@ -36,7 +35,7 @@
 
 ## Phase 4 — D4 (29/11): Lớp tất định + Guardrails
 - [ ] Heuristics: punycode, typosquatting, TLD xấu, urgency keywords, sender mismatch
-- [ ] WHOIS tuổi domain + Google Safe Browsing API (free)
+- [ ] RDAP tuổi domain (không có dữ liệu thì coi là unknown) + Google Safe Browsing API (free)
 - [ ] Chống prompt injection: system prompt tách biệt, delimiter, bỏ qua mệnh lệnh trong input
 - [ ] Fallback heuristics khi Bedrock fail (circuit-breaker)
 - **DoD:** eval set (Dev C) chạy được, có Precision/Recall
@@ -56,7 +55,7 @@
 - [ ] Env prod (Vercel + Supabase) + AWS keys trên Vercel
 - [ ] `/api/health` + cron keep-alive Supabase/Vercel
 - [ ] Smoke test live: auth, scan, import, dashboard, mock MoMo
-- [ ] CloudWatch log retention 1 ngày; chỉ log lỗi
+- [ ] Chỉ dùng Vercel logs; chỉ log lỗi, không log nội dung người dùng
 - [ ] Xác nhận spend AWS còn dư địa
 
 ## Phase 8 — D8 (3/12): Buffer
