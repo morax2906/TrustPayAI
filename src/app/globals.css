@@ -3,21 +3,66 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: 210 40% 98%;
+  --foreground: 222 47% 11%;
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 47% 11%;
+  --primary: 175 84% 26%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 214 32% 94%;
+  --secondary-foreground: 222 47% 11%;
+  --muted: 210 40% 95%;
+  --muted-foreground: 215 16% 42%;
+  --accent: 174 44% 94%;
+  --accent-foreground: 175 84% 22%;
+  --destructive: 0 72% 48%;
+  --destructive-foreground: 0 0% 100%;
+
+  --brand-navy: 217 55% 18%;
+  --brand-navy-foreground: 0 0% 100%;
+
+  --momo: 327 69% 40%;
+  --momo-foreground: 0 0% 100%;
+  --momo-soft: 327 75% 96%;
+
+  --risk-safe: 158 64% 32%;
+  --risk-safe-bg: 152 76% 95%;
+  --risk-caution: 32 95% 42%;
+  --risk-caution-bg: 38 92% 94%;
+  --risk-high: 0 72% 46%;
+  --risk-high-bg: 0 86% 96%;
+
+  --border: 214 32% 89%;
+  --input: 214 32% 86%;
+  --ring: 175 84% 26%;
+  --radius: 0.75rem;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  a:focus-visible {
+    @apply rounded-sm outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 @layer utilities {
