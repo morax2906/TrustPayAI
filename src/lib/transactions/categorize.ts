@@ -12,6 +12,18 @@ export type CategorySlug =
   | "income"
   | "other";
 
+export const EXPENSE_SLUGS = [
+  "food",
+  "transport",
+  "shopping",
+  "bills",
+  "entertainment",
+  "health",
+  "education",
+  "transfer",
+  "other",
+] as const;
+
 // Order matters: the first matching rule wins. Patterns run on accent-stripped lowercase text.
 const RULES: Array<{ slug: CategorySlug; pattern: RegExp }> = [
   {

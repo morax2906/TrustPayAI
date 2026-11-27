@@ -3,7 +3,7 @@
 Cập nhật file này khi hoàn thành một mốc D*. Lịch chi tiết: `docs/NHAN_TASKS.md`. Các việc thủ công: `docs/NHAN_SETUP_CHECKLIST.md`.
 
 ## Đã có (D0, D1)
-- Prisma schema: `User`, `Category`, `Transaction`, `ScanHistory`, `ApiUsage`, enum `TxType`, `UsageKind`. Chưa có `prisma/migrations/`.
+- Prisma schema: `User`, `Category`, `Transaction`, `ScanHistory`, `ApiUsage`, enum `TxType`, `UsageKind`. Migrations nằm trong `prisma/migrations/`.
 - Auth: NextAuth Credentials + JWT (`src/lib/auth.ts`, `session.ts`), đăng ký ở `/api/auth/register` (bắt buộc `consent: true`).
 - `/api/health`, `/api/transactions`, `/api/transactions/[id]`, `/api/import`.
 - `src/lib/transactions/`: CSV parser, normalize, dedup, service, unit test (`npm test`).
@@ -16,12 +16,18 @@ Cập nhật file này khi hoàn thành một mốc D*. Lịch chi tiết: `docs
 - Heuristic: OTP chỉ tính khi là yêu cầu (động từ gửi/cung cấp/đọc... gần "OTP"), không tính tin nhắn thông báo OTP hay lời cảnh báo "không chia sẻ". Prompt injection tự nó đủ lên `caution` (40). Bỏ ký tự zero-width trước khi so khớp. Quét tối đa 20 URL.
 - `eval/samples.json` (43 mẫu) + `npm run eval` + `src/lib/risk/eval.test.ts` (chạy trong `npm test`, làm cổng hồi quy). Mẫu do mình viết cùng lúc với rule nên số precision/recall chỉ là kiểm tra hồi quy, không phải độ chính xác thật.
 
-## Đã có (D2 một phần)
-- Phân loại giao dịch bằng luật từ khóa (`src/lib/transactions/categorize.ts`), tự chạy khi tạo hoặc import; `POST /api/transactions/categorize` phân loại lại các dòng còn `categoryId = null`. Dòng không khớp luật giữ null, không đoán. Chưa có bước Haiku cho dòng chưa khớp (chờ AWS).
+## Đã có (D2)
+- Phân loại giao dịch: luật từ khóa (`src/lib/transactions/categorize.ts`) tự chạy khi tạo hoặc import. `POST /api/transactions/categorize` phân loại lại các dòng còn `categoryId = null`; nếu Bedrock cấu hình thì Haiku xử lý các dòng chi tiêu chưa khớp (`categorize-llm.ts`, tối đa 2 lô × 40 dòng mỗi lần gọi, 10 lô/người/ngày qua `UsageKind.categorize`, tính chung vào `HAIKU_DAILY_CAP`). Đầu ra giới hạn trong danh sách danh mục cố định. Chưa thử với AWS thật.
+- Tài liệu: `docs/TECHNICAL_FAQ.md` (10 câu cho pitch, đã nói rõ các giới hạn).
+
+## Đã có (hạ tầng)
+- Supabase dev đã có migration `init`, `categorize_usage`, `enable_rls` (RLS bật, không policy, Prisma bypass bằng role owner) và đã seed. `DIRECT_URL` dùng session pooler vì host direct chỉ IPv6.
+- `npm run smoke:api` (`scripts/smoke-api.mjs`): đăng nhập demo rồi kiểm tra health, transactions, analyze, categorize. Đã chạy qua 10/10 với engine heuristic.
+- `error.txt` (không commit): danh sách việc chưa làm được hoặc lỗi gặp phải.
 
 ## Chưa có
 Detector bổ sung: RDAP, Google Safe Browsing, sender mismatch (D4), dashboard API (D6), deploy và cron (D7), `POST /api/chat`.
-Chưa kiểm thử với DB thật. Smoke test Bedrock chưa chạy (cần `.env.local`, đang chờ AWS xác minh tài khoản). Lớp Haiku mới được thử bằng client giả.
+Đã kiểm thử với DB thật (Supabase dev) bằng `npm run smoke:api`. Smoke test Bedrock chưa chạy (cần `.env.local`, đang chờ AWS xác minh tài khoản). Lớp Haiku (analyze và categorize) mới được thử bằng client giả.
 
 ## Quyết định đã chốt
 - Model: Haiku `anthropic.claude-haiku-5-5` (Bedrock, cross-region inference). Nếu ID trần bị `ValidationException`, dùng inference profile ID có tiền tố vùng. Chưa biết giá, chưa biết model có nhận `temperature` hay không (code hiện không gửi `temperature`).

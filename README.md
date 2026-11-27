@@ -39,8 +39,10 @@ npm run build          # production build
 npm run lint           # ESLint
 npm run typecheck      # tsc --noEmit
 npm test               # unit test (node:test qua tsx)
-npm run db:migrate     # prisma migrate dev
-npm run db:seed        # danh mục + tài khoản demo + 50 giao dịch
+npm run db:migrate     # prisma migrate dev (đọc .env.local)
+npm run db:seed        # danh mục + tài khoản demo + 50 giao dịch (chạy một lần)
+npm run eval           # precision/recall của engine heuristic trên eval/samples.json
+npm run smoke:api      # smoke test end-to-end (cần `npm run dev` đang chạy; thêm URL nếu khác cổng 3000)
 npm run smoke:bedrock  # kiểm tra truy cập Bedrock (cần biến AWS trong .env.local)
 ```
 
@@ -140,7 +142,7 @@ res: 201 { id } | 400 invalid_input | 409 duplicate
 `200 { ok: true }` hoặc `404 not_found`. Chỉ xóa được giao dịch của chính người dùng.
 
 ### `POST /api/transactions/categorize`
-Gán danh mục bằng luật từ khóa cho các giao dịch của người dùng chưa có danh mục (tối đa 2000 dòng mỗi lần). `200 {"examined":n,"categorized":n,"stillUncategorized":n}`. Giao dịch mới tạo hoặc import đã được phân loại tự động; dòng không khớp luật giữ `category: null`. Chưa dùng Haiku cho phân loại.
+Gán danh mục cho các giao dịch của người dùng chưa có danh mục (tối đa 2000 dòng mỗi lần). `200 {"examined":n,"categorized":n,"byAi":n,"stillUncategorized":n}`. Giao dịch mới tạo hoặc import đã được phân loại tự động bằng luật từ khóa. Khi Bedrock được cấu hình, các dòng chi tiêu còn lại được Haiku xử lý theo lô (tối đa 2 lô × 40 dòng mỗi lần gọi, 10 lô mỗi người mỗi ngày). Dòng chưa phân loại được giữ `category: null`.
 
 ### `POST /api/import`
 `multipart/form-data`, trường `file` (CSV, tối đa 1 MB và 2000 dòng).

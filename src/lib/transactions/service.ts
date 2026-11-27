@@ -1,7 +1,11 @@
 import { Prisma } from "@prisma/client";
 import { z } from "zod";
 import { db } from "@/lib/db";
+import { isBedrockConfigured } from "@/lib/env";
+import { bedrockSend, breakerOpen, recordResult } from "@/lib/risk/llm";
+import { CATEGORIZE_DAILY_BATCHES, consumeUsage, haikuAllowed } from "@/lib/risk/usage";
 import { categorizeByRules } from "./categorize";
+import { LLM_BATCH_SIZE, categorizeBatchWithHaiku } from "./categorize-llm";
 import { buildDedupHashes } from "./dedup";
 import { parseTransactionsCsv, type RowError } from "./import-csv";
 import { MAX_AMOUNT_VND, cleanDescription } from "./normalize";
@@ -132,9 +136,35 @@ export async function importCsv(userId: string, text: string): Promise<ImportSum
   };
 }
 
-export type CategorizeSummary = { examined: number; categorized: number; stillUncategorized: number };
+export type CategorizeSummary = {
+  examined: number;
+  categorized: number;
+  /** Rows categorized by Haiku (included in `categorized`). */
+  byAi: number;
+  stillUncategorized: number;
+};
 
-/** Applies keyword rules to the user's uncategorized transactions (capped per call). Safe to repeat. */
+const LLM_MAX_BATCHES = 2;
+
+async function applyCategories(userId: string, bySlug: Map<string, string[]>, categoryIds: Map<string, string>) {
+  let count = 0;
+  for (const [slug, ids] of Array.from(bySlug)) {
+    const categoryId = categoryIds.get(slug);
+    if (!categoryId) continue;
+    const res = await db.transaction.updateMany({
+      where: { userId, id: { in: ids }, categoryId: null },
+      data: { categoryId },
+    });
+    count += res.count;
+  }
+  return count;
+}
+
+/**
+ * Categorizes the user's uncategorized transactions (capped per call). Keyword rules run first.
+ * When Bedrock is configured, Haiku handles up to LLM_MAX_BATCHES batches of the expense rows
+ * left over, within the per-user and global daily limits. Safe to repeat.
+ */
 export async function categorizeUncategorized(userId: string): Promise<CategorizeSummary> {
   const LIMIT = 2000;
   const [rows, categoryIds] = await Promise.all([
@@ -145,21 +175,42 @@ export async function categorizeUncategorized(userId: string): Promise<Categoriz
     }),
     loadCategoryIds(),
   ]);
+
   const bySlug = new Map<string, string[]>();
+  const unmatched: Array<{ id: string; description: string }> = [];
   for (const r of rows) {
     const slug = categorizeByRules(r.description, r.type);
-    if (!slug) continue;
-    bySlug.set(slug, [...(bySlug.get(slug) ?? []), r.id]);
+    if (slug) bySlug.set(slug, [...(bySlug.get(slug) ?? []), r.id]);
+    else if (r.type === "expense") unmatched.push({ id: r.id, description: r.description });
   }
-  let categorized = 0;
-  for (const [slug, ids] of Array.from(bySlug)) {
-    const categoryId = categoryIds.get(slug);
-    if (!categoryId) continue;
-    const res = await db.transaction.updateMany({
-      where: { userId, id: { in: ids }, categoryId: null },
-      data: { categoryId },
-    });
-    categorized += res.count;
+  let categorized = await applyCategories(userId, bySlug, categoryIds);
+
+  let byAi = 0;
+  const modelId = process.env.BEDROCK_MODEL_ID;
+  if (unmatched.length > 0 && modelId && isBedrockConfigured() && !breakerOpen() && (await haikuAllowed().catch(() => false))) {
+    for (let b = 0; b < LLM_MAX_BATCHES; b++) {
+      const batch = unmatched.slice(b * LLM_BATCH_SIZE, (b + 1) * LLM_BATCH_SIZE);
+      if (batch.length === 0) break;
+      if (!(await consumeUsage(userId, "categorize", CATEGORIZE_DAILY_BATCHES))) break;
+      try {
+        const slugs = await categorizeBatchWithHaiku(
+          batch.map((x) => x.description),
+          modelId,
+          bedrockSend
+        );
+        recordResult(true);
+        const aiBySlug = new Map<string, string[]>();
+        slugs.forEach((slug, i) => {
+          if (slug) aiBySlug.set(slug, [...(aiBySlug.get(slug) ?? []), batch[i].id]);
+        });
+        const n = await applyCategories(userId, aiBySlug, categoryIds);
+        byAi += n;
+        categorized += n;
+      } catch {
+        recordResult(false);
+        break;
+      }
+    }
   }
-  return { examined: rows.length, categorized, stillUncategorized: rows.length - categorized };
+  return { examined: rows.length, categorized, byAi, stillUncategorized: rows.length - categorized };
 }
