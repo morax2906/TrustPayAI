@@ -12,7 +12,8 @@
     "db:migrate": "prisma migrate dev",
     "db:seed": "prisma db seed",
     "test": "tsx --test src/lib/**/*.test.ts",
-    "smoke:bedrock": "tsx --env-file=.env.local scripts/bedrock-smoke.ts"
+    "smoke:bedrock": "tsx --env-file=.env.local scripts/bedrock-smoke.ts",
+    "eval": "tsx eval/run.ts"
   },
   "dependencies": {
     "@aws-sdk/client-bedrock-runtime": "^3.1177.0",

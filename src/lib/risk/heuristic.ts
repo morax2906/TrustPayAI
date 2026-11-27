@@ -19,7 +19,7 @@ const TEXT_RULES: Rule[] = [
     code: "credential_request",
     label: "Yêu cầu mật khẩu, mã PIN hoặc thông tin thẻ",
     weight: 30,
-    pattern: /(mat khau|ma pin|\bcvv\b|so the\b|thong tin the|dang nhap lai|xac minh tai khoan)/,
+    pattern: /\b(mat khau|ma pin|\bcvv\b|so the\b|thong tin the|dang nhap lai|xac minh tai khoan)/,
   },
   {
     code: "urgency",
@@ -32,19 +32,19 @@ const TEXT_RULES: Rule[] = [
     code: "prize_bait",
     label: "Dụ nhận thưởng / quà tặng",
     weight: 25,
-    pattern: /(trung thuong|nhan qua|qua tang mien phi|hoan tien|nhan ngay \d|voucher mien phi)/,
+    pattern: /\b(trung thuong|nhan qua|qua tang mien phi|hoan tien|nhan ngay \d|voucher mien phi)/,
   },
   {
     code: "authority_impersonation",
     label: "Mạo danh cơ quan chức năng hoặc ngân hàng",
     weight: 25,
-    pattern: /(cong an|vien kiem sat|toa an|co quan dieu tra|bo cong an|lenh bat|nhan vien ngan hang)/,
+    pattern: /\b(cong an|vien kiem sat|toa an|co quan dieu tra|bo cong an|lenh bat|nhan vien ngan hang)/,
   },
   {
     code: "transfer_request",
     label: "Yêu cầu chuyển tiền / đặt cọc",
     weight: 15,
-    pattern: /(chuyen khoan|chuyen tien|dat coc|nop phi|phi xu ly|dong phi)/,
+    pattern: /\b(chuyen khoan|chuyen tien|dat coc|nop phi|phi xu ly|dong phi)/,
   },
   {
     code: "prompt_injection",

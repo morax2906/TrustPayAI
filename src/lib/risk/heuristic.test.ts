@@ -56,3 +56,9 @@ test("pre_transfer context raises score only when something is suspicious", () =
 test("excerpt masks long digit runs", () => {
   assert.equal(makeExcerpt("OTP 123456 ok"), "OTP •••••• ok");
 });
+
+test("'chuyển khoản tiền' does not trigger prize_bait (word boundary)", () => {
+  const r = analyzeHeuristic({ type: "message", content: "Mình đã chuyển khoản tiền ăn hôm qua cho bạn rồi" });
+  assert.ok(!codes(r).includes("prize_bait"));
+  assert.equal(r.level, "safe");
+});
