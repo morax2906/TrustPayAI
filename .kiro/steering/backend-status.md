@@ -16,8 +16,11 @@ Cập nhật file này khi hoàn thành một mốc D*. Lịch chi tiết: `docs
 - Heuristic: OTP chỉ tính khi là yêu cầu (động từ gửi/cung cấp/đọc... gần "OTP"), không tính tin nhắn thông báo OTP hay lời cảnh báo "không chia sẻ". Prompt injection tự nó đủ lên `caution` (40). Bỏ ký tự zero-width trước khi so khớp. Quét tối đa 20 URL.
 - `eval/samples.json` (43 mẫu) + `npm run eval` + `src/lib/risk/eval.test.ts` (chạy trong `npm test`, làm cổng hồi quy). Mẫu do mình viết cùng lúc với rule nên số precision/recall chỉ là kiểm tra hồi quy, không phải độ chính xác thật.
 
+## Đã có (D2 một phần)
+- Phân loại giao dịch bằng luật từ khóa (`src/lib/transactions/categorize.ts`), tự chạy khi tạo hoặc import; `POST /api/transactions/categorize` phân loại lại các dòng còn `categoryId = null`. Dòng không khớp luật giữ null, không đoán. Chưa có bước Haiku cho dòng chưa khớp (chờ AWS).
+
 ## Chưa có
-Phân loại giao dịch (D2), detector bổ sung: RDAP, Google Safe Browsing, sender mismatch (D4), dashboard API (D6), deploy và cron (D7), `POST /api/chat`.
+Detector bổ sung: RDAP, Google Safe Browsing, sender mismatch (D4), dashboard API (D6), deploy và cron (D7), `POST /api/chat`.
 Chưa kiểm thử với DB thật. Smoke test Bedrock chưa chạy (cần `.env.local`, đang chờ AWS xác minh tài khoản). Lớp Haiku mới được thử bằng client giả.
 
 ## Quyết định đã chốt

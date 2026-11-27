@@ -139,6 +139,9 @@ res: 201 { id } | 400 invalid_input | 409 duplicate
 ### `DELETE /api/transactions/[id]`
 `200 { ok: true }` hoặc `404 not_found`. Chỉ xóa được giao dịch của chính người dùng.
 
+### `POST /api/transactions/categorize`
+Gán danh mục bằng luật từ khóa cho các giao dịch của người dùng chưa có danh mục (tối đa 2000 dòng mỗi lần). `200 {"examined":n,"categorized":n,"stillUncategorized":n}`. Giao dịch mới tạo hoặc import đã được phân loại tự động; dòng không khớp luật giữ `category: null`. Chưa dùng Haiku cho phân loại.
+
 ### `POST /api/import`
 `multipart/form-data`, trường `file` (CSV, tối đa 1 MB và 2000 dòng).
 ```
