@@ -1,4 +1,4 @@
-﻿# TrustPay AI
+# TrustPay AI
 
 **Your Personal AI Financial Guardian** — Think Before You Trust. Think Before You Pay.
 
@@ -77,7 +77,7 @@ res:  { score: 0-100, level: "safe"|"caution"|"high",
 - `content` dài tối đa 5000 ký tự.
 - `image_text` là văn bản người dùng dán từ ảnh chụp màn hình. Server **không** tự OCR (OCR là v2).
 - `level` theo `score`: từ 70 là `high`, từ 35 là `caution`, dưới 35 là `safe` (ngưỡng tạm, có thể chỉnh).
-- Schema zod nằm ở `src/lib/risk/schema.ts`. Endpoint đã chạy (hiện chỉ có engine heuristic, `model` luôn là `"heuristic"`; lớp Haiku thêm sau mà không đổi contract).
+- Schema zod nằm ở `src/lib/risk/schema.ts`. Endpoint đã chạy (`model` là `"haiku"` khi Bedrock cấu hình đủ và gọi thành công, ngược lại là `"heuristic"`; frontend không cần xử lý khác nhau).
 - Yêu cầu đăng nhập (cookie session). `signals[].evidence` trích đoạn trong nội dung hoặc mô tả dữ kiện (vd. tên miền). `signals` rỗng nghĩa là chưa thấy dấu hiệu, và `confidence` sẽ thấp (khoảng 0.4). UI không nên hiển thị "an toàn tuyệt đối".
 - Giới hạn 30 lần quét mỗi người mỗi ngày (giờ Việt Nam).
 - Lỗi:

@@ -10,6 +10,11 @@ Cập nhật file này khi hoàn thành một mốc D*. Lịch chi tiết: `docs
 - `src/lib/risk/schema.ts`: zod cho request, response và đầu ra LLM; `levelFromScore` (70 = high, 35 = caution, tạm thời).
 - Seed: 10 danh mục, `demo@trustpay.ai`, 50 giao dịch. `scripts/bedrock-smoke.ts`.
 
+## Đã có (D3 một phần)
+- `POST /api/analyze` chạy: heuristic (`src/lib/risk/heuristic.ts`), lớp Haiku (`llm.ts`, chỉ bật khi đủ env Bedrock, chưa thử với AWS thật), giới hạn 30 scan/ngày (`usage.ts`), lưu `ScanHistory` (`history.ts`, che chuỗi từ 4 số).
+- `eval/` + 
+pm run eval` (precision/recall của heuristic; mẫu do chính mình viết nên chỉ là kiểm tra hồi quy).
+
 ## Chưa có
 Phân loại giao dịch (D2), Risk Engine và detector (D3, D4), `POST /api/analyze`, rate limit (D5), dashboard API (D6), deploy và cron (D7), `eval/`.
 Chưa kiểm thử với DB thật. Smoke test Bedrock chưa chạy (cần `.env.local`).
