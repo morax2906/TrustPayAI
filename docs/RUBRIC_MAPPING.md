@@ -12,8 +12,8 @@
 | Giải thích được, người dùng tự kiểm chứng | Báo cáo có tín hiệu và đoạn trích nguyên văn | Mốc 4 | `signals[].evidence` trong `schema.ts` | Có (API), Chờ UI |
 | Không khẳng định quá mức | Liên kết sạch ra "an toàn" kèm độ tin cậy 0,4 | Mốc 5 (1:30–1:50) | `heuristic.ts`: không tín hiệu thì `confidence = 0,4` | Có (API) |
 | Con người quyết định | Màn hình mock MoMo, nút Quay lại, câu "không tự chuyển khoản" | Mốc 7 (2:10–2:50) | `product.md` (quy tắc), `recommendation` | Chờ UI |
-| Dùng được trong 60 giây | Trang Thử trong 60 giây, tài khoản demo | Mốc 2 (không có trong bản pitch 5 phút) | `/thu-trong-60-giay` | Có |
-| Người dùng kiểm soát dữ liệu | Đồng ý khi đăng ký, lưu tối thiểu | Slide 4 (3:45–4:30) | `register.ts` (`consent: z.literal(true)`), `history.ts`; trang `/chinh-sach-du-lieu` | Có |
+| Dùng được trong 60 giây | Trang Thử trong 60 giây, tài khoản demo | Mốc 2 (không có trong bản pitch 5 phút) | `/how-to-try` | Có |
+| Người dùng kiểm soát dữ liệu | Đồng ý khi đăng ký, lưu tối thiểu | Slide 4 (3:45–4:30) | `register.ts` (`consent: z.literal(true)`), `history.ts`; trang `/privacy-policy` | Có |
 | Tiếng Việt, hiểu bối cảnh Việt Nam | Luật nhận diện chữ có dấu và không dấu, ngân hàng và ví Việt | Mốc 4, 5 | `heuristic.ts` (`fold()`, danh sách `BRANDS`) | Có |
 
 ## 2. AI-Powered (ứng dụng AI)
@@ -33,7 +33,7 @@
 
 | Điểm cần chứng minh | Tính năng / màn hình | Mốc demo | Bằng chứng | Trạng thái |
 |---|---|---|---|---|
-| API có hợp đồng ổn định | `POST /api/analyze` với zod ở đầu vào và đầu ra | Slide 4, trang `/gioi-thieu` | `schema.ts`, `route.ts` | Có |
+| API có hợp đồng ổn định | `POST /api/analyze` với zod ở đầu vào và đầu ra | Slide 4, trang `/about` | `schema.ts`, `route.ts` | Có |
 | Độ bền khi lỗi | Timeout 6 giây, breaker 3 lỗi mở 60 giây, mọi lỗi quay về heuristic | Slide 3 | `llm.ts`, `analyze.ts` | Có |
 | Bảo mật cơ bản | Xác thực bắt buộc (401), kiểm tra đầu vào (400), mã lỗi ngắn, không lộ stack trace | Không demo trực tiếp | `route.ts`, `backend-status.md` | Có |
 | Giới hạn sử dụng phía server | 30 lượt quét/ngày/tài khoản, đếm trong Postgres | Không demo trực tiếp | `usage.ts` | Có |
@@ -48,8 +48,8 @@
 |---|---|---|---|---|
 | Tích hợp được vào sản phẩm có sẵn | Trust Risk API và màn hình mô phỏng trước khi chuyển tiền (`context: "pre_transfer"`) | Mốc 7 (2:10–2:50), Slide 4 | `schema.ts`, `heuristic.ts` | Có (API), Chờ UI |
 | Chi phí kiểm soát được | Chỉ dùng Haiku, ngân sách AWS 20 USD, cảnh báo ở 15 USD, giới hạn lượt quét | Slide 4 hoặc Q&A | `tech.md` (Cost discipline), `usage.ts` | Một phần (Budget Alarm chưa cài) |
-| Tuân thủ pháp lý | Đồng ý rõ ràng, lưu tối thiểu, tham chiếu Nghị định 13/2023 | Slide 4 (3:45–4:30) | `register.ts`, `history.ts`, `/chinh-sach-du-lieu` | Có (một phần) |
-| Lộ trình rõ, phạm vi trung thực | Giới hạn hiện tại và phiên bản 2 (OCR, RDAP, Safe Browsing, cảnh báo chi tiêu) | Slide 5 (4:30–5:00) | `product.md` (Out of scope), `/gioi-thieu` | Có |
+| Tuân thủ pháp lý | Đồng ý rõ ràng, lưu tối thiểu, tham chiếu Nghị định 13/2023 | Slide 4 (3:45–4:30) | `register.ts`, `history.ts`, `/privacy-policy` | Có (một phần) |
+| Lộ trình rõ, phạm vi trung thực | Giới hạn hiện tại và phiên bản 2 (OCR, RDAP, Safe Browsing, cảnh báo chi tiêu) | Slide 5 (4:30–5:00) | `product.md` (Out of scope), `/about` | Có |
 | Vấn đề đủ lớn, có số liệu công khai | Năm 2024: hàng chục nghìn tố giác lừa đảo trực tuyến, thiệt hại ước tính gần 20.000 tỷ đồng (Bộ Công an) | Slide 1 (0:20–0:30) | Mục 4.1 bên dưới, có nguồn | Có |
 | Mô hình kinh doanh B2B2C | Trust Risk API tính phí theo lượt gọi cho ví và ngân hàng, gắn trước bước xác nhận chuyển tiền, cộng gói bảo vệ nâng cao cho cá nhân | Slide 4 (3:45–4:30) | Mục 4.2 bên dưới. **Định hướng, chưa có giá, đối tác hay doanh thu** | Có (định hướng) |
 

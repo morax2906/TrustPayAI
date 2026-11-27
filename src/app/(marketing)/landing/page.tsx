@@ -30,8 +30,8 @@ export default function LandingPage() {
               đúng đoạn nào khiến nó đáng ngờ.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <ButtonLink href="/thu-trong-60-giay">Thử trong 60 giây</ButtonLink>
-              <ButtonLink href="/gioi-thieu" variant="secondary">
+              <ButtonLink href="/how-to-try">Thử trong 60 giây</ButtonLink>
+              <ButtonLink href="/about" variant="secondary">
                 Cách hoạt động
               </ButtonLink>
             </div>
@@ -104,10 +104,10 @@ export default function LandingPage() {
           </Callout>
         </div>
         <div className="mt-8 flex flex-wrap gap-3">
-          <ButtonLink href="/thu-trong-60-giay" variant="ghost">
+          <ButtonLink href="/how-to-try" variant="ghost">
             Xem cách thử trong 60 giây
           </ButtonLink>
-          <ButtonLink href="/chinh-sach-du-lieu" variant="ghost">
+          <ButtonLink href="/privacy-policy" variant="ghost">
             Chính sách dữ liệu
           </ButtonLink>
         </div>

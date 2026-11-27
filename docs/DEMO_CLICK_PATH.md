@@ -20,13 +20,13 @@
 | Mốc | Thời gian | Màn hình | Thao tác | Lời nói chính (rút gọn) | Tiêu chí |
 |---|---|---|---|---|---|
 | 1 | 0:00–0:30 | `/landing` | Mở trang, chỉ vào slogan và bảng báo cáo minh họa | "Lừa đảo qua tin nhắn là nỗi đau thật. TrustPay không chỉ cảnh báo mà giải thích vì sao." | Human-Centered |
-| 2 | 0:30–0:45 | `/thu-trong-60-giay` | Bấm nút **Thử trong 60 giây**, chỉ tài khoản demo | "Ai cũng dùng thử được trong 60 giây." | Human-Centered |
+| 2 | 0:30–0:45 | `/how-to-try` | Bấm nút **Thử trong 60 giây**, chỉ tài khoản demo | "Ai cũng dùng thử được trong 60 giây." | Human-Centered |
 | 3 | 0:45–1:00 | Đăng nhập (TBD – Quyen) | Đăng nhập `demo@trustpay.ai` | — | Technical Execution |
 | 4 | 1:00–1:50 | Quét tin nhắn (TBD – Quyen) | Dán **Mẫu A** → bấm **Quét** → đọc điểm, mức độ, tín hiệu, trích dẫn bằng chứng | "Mỗi lý do đều trích đúng câu trong tin nhắn." | AI-Powered |
 | 5 | 1:50–2:15 | Quét liên kết (TBD – Quyen) | Dán **Mẫu B** (liên kết giả) rồi **Mẫu D** (liên kết sạch) | "Cùng giao diện, kết quả khác nhau, có lý do." | AI-Powered |
 | 6 | 2:15–2:40 | Quét tin nhắn | Dán **Mẫu C** (có lệnh chèn "Ignore previous instructions…") | "Lệnh nằm trong nội dung bị coi là dữ liệu, và còn bị ghi nhận như một tín hiệu." | Technical Execution |
 | 7 | 2:40–3:30 | Mock MoMo – trước khi chuyển tiền (TBD – Quyen) | Nhập số tiền 5.000.000đ, người nhận mới, nội dung là mẫu `s05` → màn hình hiện mức **Cần thận trọng** (heuristic: 45/100) → bấm **Quay lại** | "Trust Risk API gắn vào bước trước khi chuyển tiền. AI không tự chuyển tiền. Quyết định là của người dùng." | Feasibility & Business Impact |
-| 8 | 3:30–3:50 | `/gioi-thieu` | Chỉ sơ đồ 2 lớp và khối API | "Lớp luật tất định cộng lớp mô hình. Nếu Bedrock lỗi thì vẫn chạy bằng luật cục bộ." | Technical Execution |
+| 8 | 3:30–3:50 | `/about` | Chỉ sơ đồ 2 lớp và khối API | "Lớp luật tất định cộng lớp mô hình. Nếu Bedrock lỗi thì vẫn chạy bằng luật cục bộ." | Technical Execution |
 
 Kết thúc: 3:50–4:00 nhắc roadmap v2 (OCR, cảnh báo chi tiêu) rồi chuyển sang Q&A.
 
@@ -61,9 +61,9 @@ Dữ liệu demo cho bước này: số tiền `5.000.000đ`, người nhận m�
 
 ## 4. Điều kiện "không dead-click"
 
-- Mọi nút và liên kết trên 4 trang tĩnh trỏ tới route có thật: `/landing`, `/thu-trong-60-giay`, `/gioi-thieu`, `/chinh-sach-du-lieu`.
-- Các trang tĩnh **chưa** có liên kết sang màn hình trong ứng dụng (đăng nhập, quét, mock MoMo). Khi Quyen chốt route, thêm nút vào `/landing` và `/thu-trong-60-giay`.
-- Hình mock MoMo trên `/thu-trong-60-giay` là hình tĩnh, không bấm được.
+- Mọi nút và liên kết trên 4 trang tĩnh trỏ tới route có thật: `/landing`, `/how-to-try`, `/about`, `/privacy-policy`.
+- Các trang tĩnh **chưa** có liên kết sang màn hình trong ứng dụng (đăng nhập, quét, mock MoMo). Khi Quyen chốt route, thêm nút vào `/landing` và `/how-to-try`.
+- Hình mock MoMo trên `/how-to-try` là hình tĩnh, không bấm được.
 - Trước demo: bấm thử từng mục trên Navbar và Footer.
 
 ## 5. Phương án dự phòng

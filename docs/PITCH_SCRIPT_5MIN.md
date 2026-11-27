@@ -10,7 +10,7 @@
 |---|---|---|---|---|
 | 1 | Hook | 0:00–0:40 | 40 giây | Slide 1, rồi `/landing` |
 | 2 | Live Demo | 0:40–2:50 | 130 giây | Ứng dụng (đăng nhập, quét, mock MoMo) |
-| 3 | Làm chủ AI 2 lớp | 2:50–3:45 | 55 giây | `/gioi-thieu` rồi slide 3 |
+| 3 | Làm chủ AI 2 lớp | 2:50–3:45 | 55 giây | `/about` rồi slide 3 |
 | 4 | Tích hợp MoMo, mô hình kinh doanh & Nghị định 13 | 3:45–4:30 | 45 giây | Slide 4 |
 | 5 | Roadmap | 4:30–5:00 | 30 giây | Slide 5 |
 
@@ -23,13 +23,13 @@ Tốc độ nói chuẩn: khoảng **3,5 âm tiết/giây**, nghĩa là 10 giây
 | Mốc click-path | Dùng trong pitch | Thời gian pitch |
 |---|---|---|
 | 1. `/landing` | Có, rút còn 10 giây, nằm cuối phần Hook | 0:30–0:40 |
-| 2. `/thu-trong-60-giay` | **Bỏ** trong pitch (nói miệng ở phần README) | — |
+| 2. `/how-to-try` | **Bỏ** trong pitch (nói miệng ở phần README) | — |
 | 3. Đăng nhập | Có, rút còn 10 giây | 0:40–0:50 |
 | 4. Quét tin nhắn (mẫu A) | Có, 40 giây | 0:50–1:30 |
 | 5. Quét liên kết (mẫu B, D) | Có, 20 giây | 1:30–1:50 |
 | 6. Prompt injection (mẫu C) | Có, 20 giây | 1:50–2:10 |
 | 7. Mock MoMo | Có, 40 giây | 2:10–2:50 |
-| 8. `/gioi-thieu` | Có, mở làm nền cho phần AI 2 lớp | 2:50–3:45 |
+| 8. `/about` | Có, mở làm nền cho phần AI 2 lớp | 2:50–3:45 |
 
 ## 3. Khung 5 slide
 
@@ -95,9 +95,9 @@ Quy ước: dòng bắt đầu bằng `>` là lời nói. Dòng `[Thao tác]` l�
 
 > Cuối cùng là tích hợp vào ví. Đây là màn hình mô phỏng chuyển tiền. Tôi nhập năm triệu đồng cho người nhận mới, nội dung là tin nhắn nhờ chuyển gấp. Trước khi xác nhận, Trust Risk API đánh giá: mức cần thận trọng, bốn mươi lăm điểm, vì có áp lực thời gian và yêu cầu chuyển tiền. Khuyến nghị là tạm dừng và gọi lại bằng số quen. Tôi bấm Quay lại. AI không tự chuyển tiền. Quyết định luôn là của người dùng.
 
-### [2:50–3:45] Làm chủ AI 2 lớp: `/gioi-thieu` rồi slide 3 (55 giây, ≤ 190 từ)
+### [2:50–3:45] Làm chủ AI 2 lớp: `/about` rồi slide 3 (55 giây, ≤ 190 từ)
 
-[Thao tác] Mở `/gioi-thieu`, cuộn tới mục "Hai lớp đánh giá" trong 5 giây đầu, rồi chuyển sang slide 3.
+[Thao tác] Mở `/about`, cuộn tới mục "Hai lớp đánh giá" trong 5 giây đầu, rồi chuyển sang slide 3.
 
 > Vì sao kết quả đáng tin? Nhờ hai lớp. Lớp một là luật tất định, chạy cục bộ, không cần mạng: tên miền giả, đuôi đáng ngờ, yêu cầu OTP, áp lực thời gian. Lớp hai là mô hình Claude Haiku trên AWS Bedrock, chỉ tổng hợp và giải thích, trả về JSON cố định, sai định dạng là bị loại. Có ba chốt chặn. Một, mỗi lý do phải trích được từ tin nhắn, không thì bị bỏ và độ tin cậy giảm. Hai, điểm của lớp luật là mức sàn, nên mô hình không thể bị dụ hạ điểm. Ba, nếu Bedrock lỗi hoặc quá sáu giây, hệ thống tự quay về lớp luật, và demo không chết. Chúng tôi đo bằng năm mươi mẫu có nhãn, và công khai cả những ca còn sót.
 
@@ -136,7 +136,7 @@ Rồi im lặng. Xem `docs/TECHNICAL_FAQ.md` cho 5 câu cốt lõi.
 ## 7. Danh sách tập luyện
 
 - [ ] Đọc to từng đoạn, bấm giờ. Nếu một đoạn vượt ngân sách, cắt câu, không nói nhanh hơn.
-- [ ] Tab trình duyệt mở sẵn: `/landing`, đăng nhập, quét, mock MoMo, `/gioi-thieu`.
+- [ ] Tab trình duyệt mở sẵn: `/landing`, đăng nhập, quét, mock MoMo, `/about`.
 - [ ] Mẫu A, B, C, D và `s05` chép sẵn vào một file ghi chú.
 - [ ] Đã đăng xuất trước khi bắt đầu, còn đủ lượt quét trong ngày (giới hạn 30).
 - [ ] Có video backup (D7) và ảnh chụp từng màn hình trong slide ẩn.

@@ -30,7 +30,7 @@ export default function AboutPage() {
         title="Lớp tin cậy cho mọi lần bạn sắp tin và sắp trả tiền"
         description="Lừa đảo qua tin nhắn và liên kết giả ngày càng tinh vi. TrustPay AI giúp bạn dừng lại một nhịp, với lý do rõ ràng để quyết định."
       >
-        <ButtonLink href="/thu-trong-60-giay">Thử trong 60 giây</ButtonLink>
+        <ButtonLink href="/how-to-try">Thử trong 60 giây</ButtonLink>
       </PageHeader>
 
       <Section eyebrow="Vấn đề" title="Người dùng cần lý do, không chỉ cảnh báo">

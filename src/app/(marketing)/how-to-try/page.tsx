@@ -52,7 +52,7 @@ export default function TryIn60SecondsPage() {
         title="Thử TrustPay AI trong 60 giây"
         description="Năm bước ngắn, dùng các mẫu có sẵn. Không cần dữ liệu thật của bạn."
       >
-        <ButtonLink href="/gioi-thieu" variant="secondary">
+        <ButtonLink href="/about" variant="secondary">
           Tìm hiểu cách hoạt động
         </ButtonLink>
       </PageHeader>
