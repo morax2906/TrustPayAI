@@ -1,4 +1,4 @@
-# TrustPay AI
+﻿# TrustPay AI
 
 **Your Personal AI Financial Guardian** — Think Before You Trust. Think Before You Pay.
 
@@ -77,7 +77,34 @@ res:  { score: 0-100, level: "safe"|"caution"|"high",
 - `content` dài tối đa 5000 ký tự.
 - `image_text` là văn bản người dùng dán từ ảnh chụp màn hình. Server **không** tự OCR (OCR là v2).
 - `level` theo `score`: từ 70 là `high`, từ 35 là `caution`, dưới 35 là `safe` (ngưỡng tạm, có thể chỉnh).
-- Schema zod nằm ở `src/lib/risk/schema.ts`. Endpoint sẽ có ở D5.
+- Schema zod nằm ở `src/lib/risk/schema.ts`. Endpoint đã chạy (hiện chỉ có engine heuristic, `model` luôn là `"heuristic"`; lớp Haiku thêm sau mà không đổi contract).
+- Yêu cầu đăng nhập (cookie session). `signals[].evidence` trích đoạn trong nội dung hoặc mô tả dữ kiện (vd. tên miền). `signals` rỗng nghĩa là chưa thấy dấu hiệu, và `confidence` sẽ thấp (khoảng 0.4). UI không nên hiển thị "an toàn tuyệt đối".
+- Giới hạn 30 lần quét mỗi người mỗi ngày (giờ Việt Nam).
+- Lỗi:
+
+| HTTP | `error` | Khi nào |
+|---|---|---|
+| 400 | `invalid_json` | Body không phải JSON |
+| 400 | `invalid_input` | Sai `type`, `content` rỗng hoặc dài hơn 5000 ký tự, `context` khác `pre_transfer` |
+| 401 | `unauthorized` | Chưa đăng nhập |
+| 429 | `rate_limited` | Quá 30 lần quét trong ngày |
+| 500 | `server_error` | Lỗi server |
+
+Ví dụ:
+
+```
+POST /api/analyze
+{ "type": "message", "content": "Tài khoản sẽ bị khóa, gửi mã OTP ngay lập tức", "context": "pre_transfer" }
+
+200
+{ "score": 65, "level": "caution",
+  "signals": [
+    { "code": "otp_request", "label": "Yêu cầu cung cấp mã OTP / mã xác thực", "evidence": "OTP" },
+    { "code": "urgency", "label": "Tạo áp lực phải hành động gấp", "evidence": "sẽ bị khóa" },
+    { "code": "pre_transfer_context", "label": "...", "evidence": "..." } ],
+  "recommendation": "Tạm dừng chuyển tiền và xác minh người nhận qua kênh khác ...", "confidence": 0.8, "model": "heuristic" }
+```
+
 - Không đổi contract mà không thông báo frontend và cập nhật README này.
 
 ## API đã có
