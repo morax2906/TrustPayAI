@@ -12,11 +12,10 @@ Cập nhật file này khi hoàn thành một mốc D*. Lịch chi tiết: `docs
 
 ## Đã có (D3 một phần)
 - `POST /api/analyze` chạy: heuristic (`src/lib/risk/heuristic.ts`), lớp Haiku (`llm.ts`, chỉ bật khi đủ env Bedrock, chưa thử với AWS thật), giới hạn 30 scan/ngày (`usage.ts`), lưu `ScanHistory` (`history.ts`, che chuỗi từ 4 số).
-- `eval/` + 
-pm run eval` (precision/recall của heuristic; mẫu do chính mình viết nên chỉ là kiểm tra hồi quy).
+- `eval/` + `npm run eval` (precision/recall của heuristic; mẫu do chính mình viết nên chỉ là kiểm tra hồi quy).
 
 ## Chưa có
-Phân loại giao dịch (D2), Risk Engine và detector (D3, D4), `POST /api/analyze`, rate limit (D5), dashboard API (D6), deploy và cron (D7), `eval/`.
+Phân loại giao dịch (D2), detector bổ sung: RDAP, Google Safe Browsing (D4), dashboard API (D6), deploy và cron (D7). Chưa thử `/api/analyze` với DB thật và Bedrock thật.
 Chưa kiểm thử với DB thật. Smoke test Bedrock chưa chạy (cần `.env.local`).
 
 ## Quyết định đã chốt
