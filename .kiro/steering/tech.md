@@ -1,7 +1,7 @@
 ﻿# TrustPay AI: Tech Stack and Conventions
 
 ## Current state
-Bare `create-next-app` skeleton. Prisma, auth, API routes and UI components are not yet added. Planned items below are targets, not installed.
+Backend is in place: Prisma schema, NextAuth, transactions/import APIs, and `POST /api/analyze` with the two-layer risk engine (see `backend-status.md`). UI components (shadcn/ui) are Quyen's and may not exist yet. Items marked "Planned" are not necessarily installed.
 
 ## Stack
 - Next.js 14.2 (App Router), React 18, TypeScript (strict), Tailwind 3.4, ESLint 8

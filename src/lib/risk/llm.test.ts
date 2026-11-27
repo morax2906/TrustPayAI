@@ -99,3 +99,36 @@ test("circuit breaker opens after 3 failures", () => {
   assert.equal(breakerOpen(t + 1000), true);
   assert.equal(breakerOpen(t + 61_000), false);
 });
+
+test("allowLlm=false skips the model entirely", async () => {
+  let called = false;
+  const r = await analyze(scam, {
+    modelId: model,
+    allowLlm: false,
+    send: async () => {
+      called = true;
+      throw new Error("should not be called");
+    },
+  });
+  assert.equal(called, false);
+  assert.equal(r.model, "heuristic");
+});
+
+test("model score without a verified signal does not raise the deterministic score", async () => {
+  const r = await analyze(
+    { type: "message", content: "xin chào, hẹn gặp chiều nay" },
+    {
+      modelId: model,
+      send: fake({
+        score: 95,
+        level: "high",
+        signals: [{ code: "made_up", label: "Bịa", evidence: "không có trong nội dung" }],
+        evidence: [],
+        recommendation: "Rất nguy hiểm.",
+        confidence: 0.9,
+      }),
+    }
+  );
+  assert.equal(r.level, "safe");
+  assert.equal(r.signals.length, 0);
+});

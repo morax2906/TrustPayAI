@@ -11,6 +11,8 @@ const schema = z.object({
   BEDROCK_MODEL_ID: z.string().min(1).optional(),
   SAFE_BROWSING_API_KEY: z.string().min(1).optional(),
   CRON_SECRET: z.string().min(1).optional(),
+  // Max Haiku calls per day across all users. Beyond it the engine stays on heuristics.
+  HAIKU_DAILY_CAP: z.coerce.number().int().positive().optional(),
 });
 
 export type Env = z.infer<typeof schema>;

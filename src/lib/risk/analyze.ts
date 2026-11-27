@@ -9,12 +9,12 @@ import { analyzeResponseSchema, type AnalyzeRequest, type AnalyzeResponse } from
  */
 export async function analyze(
   req: AnalyzeRequest,
-  opts: { send?: Send; modelId?: string } = {}
+  opts: { send?: Send; modelId?: string; allowLlm?: boolean } = {}
 ): Promise<AnalyzeResponse> {
   const base = analyzeResponseSchema.parse(analyzeHeuristic(req));
   const modelId = opts.modelId ?? process.env.BEDROCK_MODEL_ID;
   const enabled = opts.send ? Boolean(modelId) : isBedrockConfigured();
-  if (!enabled || !modelId || breakerOpen()) return base;
+  if (!enabled || !modelId || opts.allowLlm === false || breakerOpen()) return base;
 
   try {
     const merged = await analyzeWithHaiku(req, base, modelId, opts.send ?? bedrockSend);

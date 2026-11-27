@@ -59,6 +59,7 @@ Khai báo trong `.env.local` (không commit `.env*`). Mẫu ở `.env.example`. 
 | `AWS_REGION` | Không | Region Bedrock |
 | `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` | Không | Credentials của IAM user chỉ được invoke một model Bedrock |
 | `BEDROCK_MODEL_ID` | Không | ID model Haiku (hoặc inference profile ID) |
+| `HAIKU_DAILY_CAP` | Không | Trần số lượt gọi Haiku mỗi ngày trên toàn hệ thống (mặc định 300). Vượt trần thì dùng heuristic |
 | `SAFE_BROWSING_API_KEY` | Không | Key Google Safe Browsing |
 | `DEMO_PASSWORD` | Không | Mật khẩu tài khoản demo khi seed (mặc định `Demo@12345`) |
 

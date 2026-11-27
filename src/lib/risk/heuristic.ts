@@ -13,49 +13,50 @@ const TEXT_RULES: Rule[] = [
     code: "otp_request",
     label: "Yêu cầu cung cấp mã OTP / mã xác thực",
     weight: 35,
-    pattern: /\b(otp|ma xac thuc|ma xac nhan|ma bao mat)\b/,
+    pattern:
+      /(?<!\bkhong )(?<!\bdung )\b(cung cap|gui|nhap|doc|cho|chia se|xac nhan)\b[^.\n]{0,25}\b(otp|ma xac thuc|ma xac nhan|ma bao mat)\b|\b(otp|ma xac thuc|ma xac nhan|ma bao mat)\b[^.\n]{0,20}\b(cho toi|cho chung toi|cho nhan vien|vao (link|duong dan|website))\b/,
   },
   {
     code: "credential_request",
     label: "Yêu cầu mật khẩu, mã PIN hoặc thông tin thẻ",
     weight: 30,
-    pattern: /\b(mat khau|ma pin|\bcvv\b|so the\b|thong tin the|dang nhap lai|xac minh tai khoan)/,
+    pattern: /\b(mat khau|ma pin|cvv|so the|thong tin the|dang nhap lai|xac minh tai khoan)\b/,
   },
   {
     code: "urgency",
     label: "Tạo áp lực phải hành động gấp",
     weight: 20,
     pattern:
-      /(khan cap|ngay lap tuc|trong vong \d+ ?(gio|h|phut)|bi khoa|tam khoa|se bi khoa|het han|cang som cang tot|urgent|immediately)/,
+      /\b(khan cap|ngay lap tuc|trong vong \d+ ?(gio|h|phut)|bi khoa|tam khoa|se bi khoa|het han|cang som cang tot|urgent|immediately)\b/,
   },
   {
     code: "prize_bait",
     label: "Dụ nhận thưởng / quà tặng",
     weight: 25,
-    pattern: /\b(trung thuong|nhan qua|qua tang mien phi|hoan tien|nhan ngay \d|voucher mien phi)/,
+    pattern: /\b(trung thuong|nhan qua|qua tang mien phi|hoan tien|nhan ngay \d+|voucher mien phi)\b/,
   },
   {
     code: "authority_impersonation",
     label: "Mạo danh cơ quan chức năng hoặc ngân hàng",
     weight: 25,
-    pattern: /\b(cong an|vien kiem sat|toa an|co quan dieu tra|bo cong an|lenh bat|nhan vien ngan hang)/,
+    pattern: /\b(cong an (?!luong|viec|ty)|vien kiem sat|toa an|co quan dieu tra|bo cong an|lenh bat|nhan vien ngan hang)\b/,
   },
   {
     code: "transfer_request",
     label: "Yêu cầu chuyển tiền / đặt cọc",
     weight: 15,
-    pattern: /\b(chuyen khoan|chuyen tien|dat coc|nop phi|phi xu ly|dong phi)/,
+    pattern: /\b(chuyen khoan|chuyen tien|dat coc|nop phi|phi xu ly|dong phi)\b/,
   },
   {
     code: "prompt_injection",
     label: "Nội dung chứa lệnh cố điều khiển hệ thống phân tích",
-    weight: 25,
+    weight: 40,
     pattern:
       /(ignore (all |the )?(previous|above|prior) (instructions|prompts?)|disregard (the )?(previous|above)|system prompt|bo qua (moi |cac )?(huong dan|chi dan|lenh)|danh gia (la )?an toan|mark (this )?as safe)/,
   },
 ];
 
-const BAD_TLDS = new Set(["xyz", "top", "click", "icu", "vip", "work", "buzz", "cfd", "sbs", "rest", "cyou", "monster", "zip", "mov"]);
+const BAD_TLDS = new Set(["xyz", "top", "click", "icu", "vip", "work", "buzz", "cfd", "sbs", "rest", "cyou", "monster"]);
 const SHORTENERS = new Set(["bit.ly", "tinyurl.com", "cutt.ly", "t.ly", "rebrand.ly", "is.gd", "shorturl.at", "tiny.cc", "rb.gy", "s.id"]);
 
 const BRANDS: Record<string, string[]> = {
@@ -64,13 +65,13 @@ const BRANDS: Record<string, string[]> = {
   vnpay: ["vnpay.vn"],
   vietcombank: ["vietcombank.com.vn", "vietcombank.com"],
   techcombank: ["techcombank.com", "techcombank.com.vn"],
-  bidv: ["bidv.com.vn"],
+  bidv: ["bidv.com.vn", "bidv.vn"],
   mbbank: ["mbbank.com.vn"],
-  vietinbank: ["vietinbank.vn"],
+  vietinbank: ["vietinbank.vn", "vietinbank.com.vn"],
   agribank: ["agribank.com.vn"],
   tpbank: ["tpb.vn", "tpbank.com.vn"],
   vpbank: ["vpbank.com.vn"],
-  shopee: ["shopee.vn", "shopee.com"],
+  shopee: ["shopee.vn", "shopee.com", "shopee.com.vn"],
 };
 
 type Mapped = { text: string; map: number[] };
@@ -82,6 +83,7 @@ function fold(s: string): Mapped {
   const map: number[] = [];
   for (let i = 0; i < nfc.length; i++) {
     const folded = nfc[i]
+      .replace(/[\u200b-\u200f\u2060\ufeff\u00ad]/g, "")
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "")
       .replace(/đ/gi, "d")
@@ -118,8 +120,10 @@ function findBrandImpersonation(host: string): string | null {
   const labels = squashed.split(/[.\-]/).filter(Boolean);
   for (const [brand, domains] of Object.entries(BRANDS)) {
     if (isOfficial(host, domains)) continue;
+    const contains =
+      brand.length >= 6 ? squashed.replace(/[.\-]/g, "").includes(brand) : labels.includes(brand);
     const hit =
-      squashed.replace(/[.\-]/g, "").includes(brand) ||
+      contains ||
       (brand.length >= 6 && labels.some((l) => l !== brand && Math.abs(l.length - brand.length) <= 1 && levenshtein(l, brand) === 1));
     if (hit) return brand;
   }
@@ -131,7 +135,7 @@ const URL_IN_TEXT = /(?:https?:\/\/|www\.)[^\s<>"')]+|\b(?:[a-z0-9-]+\.)+[a-z]{2
 function extractUrls(req: AnalyzeRequest): string[] {
   if (req.type === "url") return [req.content.trim()];
   const found = req.content.match(URL_IN_TEXT) ?? [];
-  return Array.from(new Set(found.map((u) => u.replace(/[.,;:!?]+$/, "")))).slice(0, 5);
+  return Array.from(new Set(found.map((u) => u.replace(/[.,;:!?]+$/, "")))).slice(0, 20);
 }
 
 function urlSignals(raw: string): Array<Signal & { weight: number }> {

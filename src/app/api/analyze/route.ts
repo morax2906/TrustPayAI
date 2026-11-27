@@ -3,7 +3,7 @@ import { getUserId } from "@/lib/session";
 import { analyze } from "@/lib/risk/analyze";
 import { saveScan } from "@/lib/risk/history";
 import { analyzeRequestSchema } from "@/lib/risk/schema";
-import { consumeScan } from "@/lib/risk/usage";
+import { consumeScan, haikuAllowed } from "@/lib/risk/usage";
 
 export const dynamic = "force-dynamic";
 
@@ -24,7 +24,9 @@ export async function POST(req: Request) {
     if (!(await consumeScan(userId))) {
       return NextResponse.json({ error: "rate_limited" }, { status: 429 });
     }
-    const result = await analyze(parsed.data);
+    // If the budget check itself fails, stay on heuristics rather than risk uncapped spend.
+    const allowLlm = await haikuAllowed().catch(() => false);
+    const result = await analyze(parsed.data, { allowLlm });
     // History is best effort: a failed write must not hide the result from the user.
     await saveScan(userId, parsed.data, result).catch(() => undefined);
     return NextResponse.json(result);
