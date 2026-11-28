@@ -1,15 +1,41 @@
-import Link from "next/link";
-import { BackToHomeLink } from "@/components/marketing/back-to-home-link";
+import type { Metadata } from "next";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import { authOptions } from "@/lib/auth";
+import { LoginForm } from "@/components/auth/LoginForm";
+import { BackToHomeLink } from "@/components/marketing/BackToHomeLink";
 
-export default function LoginPlaceholderPage() {
+export const metadata: Metadata = {
+  title: "Đăng nhập",
+};
+
+type LoginPageProps = {
+  searchParams?: {
+    callbackUrl?: string;
+    registered?: string;
+  };
+};
+
+function sanitizeCallbackUrl(raw?: string): string {
+  if (!raw || !raw.startsWith("/") || raw.startsWith("//")) return "/dashboard";
+  return raw;
+}
+
+export default async function LoginPage({ searchParams }: LoginPageProps) {
+  const session = await getServerSession(authOptions);
+  if (session?.user?.id) {
+    redirect("/dashboard");
+  }
+
+  const callbackUrl = sanitizeCallbackUrl(searchParams?.callbackUrl);
+  const registered = searchParams?.registered === "1";
+
   return (
-    <div className="mx-auto flex min-h-[60vh] max-w-4xl items-center px-4 py-14 sm:px-6 lg:px-8">
-      <div className="w-full rounded-3xl border border-border bg-card p-7 shadow-sm sm:p-10">
+    <div className="mx-auto flex min-h-[75vh] max-w-5xl flex-col items-center justify-center px-4 py-10 sm:px-6 lg:px-8">
+      <div className="mb-6 w-full max-w-md">
         <BackToHomeLink />
-        <h1 className="mt-8 text-3xl font-bold tracking-tight text-navy sm:text-4xl">Đăng nhập / Dùng thử</h1>
-        <p className="mt-4 max-w-xl text-base leading-7 text-muted-foreground">Khu vực đăng nhập và tài khoản demo sẽ sẵn sàng trong bước tiếp theo.</p>
-        <Link href="/how-to-try" className="mt-6 inline-flex text-sm font-semibold text-primary hover:underline">Xem cách dùng</Link>
       </div>
+      <LoginForm callbackUrl={callbackUrl} registered={registered} />
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { BackToHomeLink } from "@/components/marketing/back-to-home-link";
+import { BackToHomeLink } from "@/components/marketing/BackToHomeLink";
 
 export default function HowToTryPage() {
   return (

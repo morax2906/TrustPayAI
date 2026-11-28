@@ -1,5 +1,5 @@
 import { LockKeyhole } from "lucide-react";
-import { BackToHomeLink } from "@/components/marketing/back-to-home-link";
+import { BackToHomeLink } from "@/components/marketing/BackToHomeLink";
 
 export default function PrivacyPage() {
   return (

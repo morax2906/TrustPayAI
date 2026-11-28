@@ -17,10 +17,10 @@ Dự án tham gia cuộc thi (Việt Nam). Lõi sản phẩm là **Trust Layer**
 ## Thử trong 60 giây
 
 1. `npm install` (tự chạy `prisma generate`)
-2. Copy `.env.example` thành `.env.local` và điền giá trị (xem [Biến môi trường](#biến-môi-trường))
+2. Tạo `.env.local` và điền các biến cần thiết trong [bảng biến môi trường](#biến-môi-trường)
 3. `npx prisma migrate dev` rồi `npm run db:seed`
 4. `npm run dev` → mở http://localhost:3000
-5. Đăng nhập bằng **tài khoản demo**: `demo@trustpay.ai` / `Demo@12345` (đặt lại bằng biến `DEMO_PASSWORD` khi seed)
+5. Đăng nhập bằng **tài khoản demo**: `demo@trustpay.ai` / `Demo@12345`. Khi đổi mật khẩu, đặt cùng `DEMO_PASSWORD` ở môi trường build Next.js và môi trường chạy seed; Next.js đưa giá trị này vào nút đăng nhập demo khi build.
 6. Luồng thử: dán một tin nhắn/URL đáng ngờ → xem báo cáo rủi ro → thử màn hình MoMo mô phỏng (pre-transfer).
 
 ## Stack
@@ -48,7 +48,7 @@ Lint và typecheck phải pass trước khi nộp.
 
 ## Biến môi trường
 
-Khai báo trong `.env.local` (không commit `.env*`). Mẫu ở `.env.example`. Biến được kiểm tra bằng zod trong `src/lib/env.ts`.
+Khai báo trong `.env.local` (không commit `.env*`). Các biến cần thiết được liệt kê bên dưới và kiểm tra bằng zod trong `src/lib/env.ts`.
 
 | Biến | Bắt buộc | Mô tả |
 |---|---|---|
@@ -61,7 +61,7 @@ Khai báo trong `.env.local` (không commit `.env*`). Mẫu ở `.env.example`. 
 | `BEDROCK_MODEL_ID` | Không | ID model Haiku (hoặc inference profile ID) |
 | `HAIKU_DAILY_CAP` | Không | Trần số lượt gọi Haiku mỗi ngày trên toàn hệ thống (mặc định 300). Vượt trần thì dùng heuristic |
 | `SAFE_BROWSING_API_KEY` | Không | Key Google Safe Browsing |
-| `DEMO_PASSWORD` | Không | Mật khẩu tài khoản demo khi seed (mặc định `Demo@12345`) |
+| `DEMO_PASSWORD` | Không | Mật khẩu tài khoản demo khi seed và build nút đăng nhập nhanh (mặc định `Demo@12345`) |
 
 Thiếu cấu hình AWS thì Risk Engine dùng heuristics local (`model: "heuristic"`).
 
