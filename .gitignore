@@ -35,5 +35,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-#plam
+#plan
 /plan&idea/
+
+# env files
+.env
+.env.local
